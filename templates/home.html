@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction API</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>House Price Prediction</h1>
+    <form id="predictionForm">
+        <label for="crim">Crime Rate:</label>
+        <input type="text" id="crim" name="crim" required><br><br>
+
+        <label for="zn">Zoned Land:</label>
+        <input type="text" id="zn" name="zn" required><br><br>
+
+        <label for="indus">Non-retail Business:</label>
+        <input type="text" id="indus" name="indus" required><br><br>
+
+        <label for="chas">Charles River Dummy:</label>
+        <input type="text" id="chas" name="chas" required><br><br>
+
+        <label for="nox">Nitrogen Oxides:</label>
+        <input type="text" id="nox" name="nox" required><br><br>
+
+        <label for="rm">Rooms per Dwelling:</label>
+        <input type="text" id="rm" name="rm" required><br><br>
+
+        <label for="age">Proportion of Units Built Before 1940:</label>
+        <input type="text" id="age" name="age" required><br><br>
+
+        <label for="dis">Distance to Employment Centers:</label>
+        <input type="text" id="dis" name="dis" required><br><br>
+
+        <label for="rad">Radial Highway Accessibility:</label>
+        <input type="text" id="rad" name="rad" required><br><br>
+
+        <label for="tax">Property Tax Rate:</label>
+        <input type="text" id="tax" name="tax" required><br><br>
+
+        <label for="ptratio">Pupil-Teacher Ratio:</label>
+        <input type="text" id="ptratio" name="ptratio" required><br><br>
+
+        <label for="b">Proportion of African American Population:</label>
+        <input type="text" id="b" name="b" required><br><br>
+
+        <label for="lstat">Lower Status Population Percentage:</label>
+        <input type="text" id="lstat" name="lstat" required><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>Predicted House Price:</h2>
+    <div id="predictionResult"></div>
+
+    <script>
+        $(document).ready(function () {
+            $("#predictionForm").on("submit", function (event) {
+                event.preventDefault();
+                var data = {
+                    'data': {
+                        'crim': parseFloat($("#crim").val()),
+                        'zn': parseFloat($("#zn").val()),
+                        'indus': parseFloat($("#indus").val()),
+                        'chas': parseFloat($("#chas").val()),
+                        'nox': parseFloat($("#nox").val()),
+                        'rm': parseFloat($("#rm").val()),
+                        'age': parseFloat($("#age").val()),
+                        'dis': parseFloat($("#dis").val()),
+                        'rad': parseFloat($("#rad").val()),
+                        'tax': parseFloat($("#tax").val()),
+                        'ptratio': parseFloat($("#ptratio").val()),
+                        'b': parseFloat($("#b").val()),
+                        'lstat': parseFloat($("#lstat").val())
+                    }
+                };
+
+                $.ajax({
+                    url: "/predict",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        $('#predictionResult').text('Predicted House Price: $' + response);
+                    },
+                    error: function (xhr, status, error) {
+                        alert("An error occurred: " + error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
