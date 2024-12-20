@@ -42,39 +42,25 @@ pip install -r requirements.txt
 
 If you're planning to deploy the application, you can follow these steps for setting up Heroku:
 
-Log in to your Heroku account using the CLI:
+1. Log in to your Heroku account using your web browser.
+2. Create new app.
+3. Choose the Github deployment Method and connect to your repository.
+4. Your application is deployed.
 
-```bash
-heroku login
-```
+### 5. Deployment using Docker
 
-Create a new Heroku app:
+I have added all the required docker files to the repository.
 
-```bash
-heroku create your-app-name
-```
-
-Add a `Procfile` to the root of your project. The `Procfile` should contain:
-
-```txt
-web: gunicorn app:app
-```
-
-This tells Heroku how to run your Flask application using gunicorn (a production WSGI server).
-
-Commit the changes and push to Heroku:
-
-```bash
-git add .
-git commit -m "Initial commit"
-git push heroku master
-```
-
-Open the app in your browser:
-
-```bash
-heroku open
-```
+#### 1. Configure GitHub Secrets
+After creating app in the Heroku. Add the Heroku credentials in your repository using GitHub action.
+1. Go to Settings → Secrets and variables → Actions → New repository secret.
+2. Add:
+* HEROKU_EMAIL
+* HEROKU_API_KEY
+* HEROKU_APP_NAME
+#### 2. Test Your Pipeline
+1. Push changes to the main branch.
+2. GitHub Actions will automatically build and push the Docker image to Heroku.
 
 ### Additional Steps
 
@@ -91,4 +77,3 @@ Make sure the app is running on your local server (usually http://127.0.0.1:5000
 #### Deploy to Heroku (if applicable)
 
 After completing the local setup, if you wish to deploy, follow the Heroku deployment steps mentioned earlier.
-
