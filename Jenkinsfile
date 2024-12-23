@@ -2,43 +2,54 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "divyam98/streamlit-app"
-        PORT = "8501"
+        DOCKER_IMAGE = "house-price-prediction"
+        DOCKER_TAG = "latest"
     }
 
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
-                git branch: 'main', 
-                    url: 'https://github.com/divyam-kalwar/boston-house-pricing.git',
-                    credentialsId: 'github-token' // Add your GitHub credentials ID here
+                // Checkout the code from the Git repository
+                git 'https://github.com/divyam-kalwar/boston-house-pricing.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t ${IMAGE_NAME} .'
+                    // Build the Docker image
+                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
                 }
             }
         }
 
-        stage('Push Docker Image') {
-            steps {
-                withDockerRegistry([credentialsId: 'dockerhub-credentials-id', url: 'https://index.docker.io/v1/']) {
-                    sh 'docker push ${IMAGE_NAME}'
-                }
-            }
-        }
-
-        stage('Run Container') {
+        stage('Test Docker Image') {
             steps {
                 script {
-                    sh '''
-                        docker stop streamlit-app || true
-                        docker rm streamlit-app || true
-                        docker run -d -p ${PORT}:${PORT} --name streamlit-app ${IMAGE_NAME}
-                    '''
+                    // Run the Docker container to test it
+                    sh "docker run -d -p 5000:5000 ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                }
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    // Log in to Docker Hub
+                    sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                    
+                    // Tag the image with Docker Hub repository and push
+                    sh "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} your-dockerhub-username/${DOCKER_IMAGE}:${DOCKER_TAG}"
+                    sh "docker push your-dockerhub-username/${DOCKER_IMAGE}:${DOCKER_TAG}"
+                }
+            }
+        }
+
+        stage('Deploy to Streamlit') {
+            steps {
+                script {
+                    // Deploy to Streamlit (assuming you have Streamlit sharing or other deployment methods)
+                    sh "streamlit share your-dockerhub-username/${DOCKER_IMAGE}:${DOCKER_TAG}"
                 }
             }
         }
@@ -46,10 +57,8 @@ pipeline {
 
     post {
         always {
-            echo 'Pipeline finished.'
-        }
-        failure {
-            echo 'Pipeline failed.'
+            // Clean up the docker containers after pipeline completion
+            sh "docker system prune -f"
         }
     }
 }
