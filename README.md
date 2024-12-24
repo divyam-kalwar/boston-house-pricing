@@ -9,7 +9,6 @@ Before starting, ensure you have the following tools and software installed:
 3. [Heroku Account](https://heroku.com): For deploying the application to the cloud (optional).
 4. [Git CLI](https://git-scm.com/book/en/v2/Getting-Started-The-Command-Line): Command-line tool for version control.
 5. [Docker](https://www.docker.com/): To containerize your application for deployment.
-6. [Conda](https://docs.conda.io/en/latest/): For managing Python environments.
 
 ---
 
@@ -31,7 +30,7 @@ cd boston-house-pricing
 To avoid conflicts with your existing Python setup, create a separate virtual environment:
 
 ```bash
-conda create -n venv python==3.7 -y
+conda create -n venv python==3.10 -y
 ```
 ```bash
 conda activate venv
@@ -122,11 +121,7 @@ Check the logs for debugging if the application fails locally or during deployme
   heroku logs --tail
   ```
 
-### Recommended Tools for Future Enhancements
-- [Streamlit](https://streamlit.io/): For creating interactive visualizations and dashboards.
-- [Jenkins](https://www.jenkins.io/): For building a CI/CD pipeline for automated testing and deployment.
-
----
-
+I have deployed my app on `Render` you can deploy on heroku all files are provided.
+[boston-house-prediction](https://boston-house-pricing-twgx.onrender.com)
 Enjoy predicting Boston house prices with your new application!
 
